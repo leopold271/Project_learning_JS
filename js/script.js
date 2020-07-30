@@ -40,8 +40,6 @@ document.addEventListener('DOMContentLoaded', () => {
 
    const deadLine = '2020-08-07';
 
-
-
    function timeUntilEnd(endtime) {
       const t = Date.parse(endtime) - Date.parse(new Date()),
          days = Math.round(t / 1000 / 60 / 60 / 24),
@@ -88,4 +86,42 @@ document.addEventListener('DOMContentLoaded', () => {
       }
    }
    setTimer(deadLine);
+
+   //modal window
+
+   const modalWindowTriggers = document.querySelectorAll('[data-modal]'),
+      closeModalWindowTrigger = document.querySelector('[data-close]'),
+      modal = document.querySelector('.modal'),
+      contentInsideModal = modal.querySelector('.modal__dialog');
+
+   modalWindowTriggers.forEach(btn => {
+      btn.addEventListener('click', () => {
+         modal.classList.add('show');
+         modal.classList.remove('hide');
+         document.documentElement.style.overflow = 'hidden';
+      });
+   });
+
+   function closeModal() {
+      modal.classList.add('hide');
+      modal.classList.remove('show');
+      document.documentElement.style.overflow = '';
+   }
+
+   closeModalWindowTrigger.addEventListener('click', closeModal);
+
+   modal.addEventListener('click', (e) => {
+      if (e.target == modal) {
+         closeModal();
+      }
+   });
+
+   document.addEventListener('keydown', (e) => {
+      if (e.code === 'Escape' && modal.classList.contains('show')) {
+         closeModal();
+      }
+   });
+
+
+
 });
