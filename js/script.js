@@ -303,9 +303,11 @@ document.addEventListener('DOMContentLoaded', () => {
       allSlideNum = document.querySelector('#total'),
       slidesWrapper = document.querySelector('.offer__slider-wrapper'),
       slidesField = document.querySelector('.offer__slider-inner'),
-      width = window.getComputedStyle(slidesWrapper).width;
+      width = window.getComputedStyle(slidesWrapper).width,
+      slider = document.querySelector('.offer__slider');
    let slideIndex = 1,
-      offset = 0;
+      offset = 0,
+      dotsMassive = [];
 
    if (slides.length < 10) {
       allSlideNum.textContent = `0${slides.length}`;
@@ -327,6 +329,41 @@ document.addEventListener('DOMContentLoaded', () => {
       slide.style.width = width;
    });
 
+   slider.style.position = 'relative';
+
+   const dots = document.createElement('ol');
+   dots.classList.add('carousel-indicators');
+
+
+   for (let i = 0; i < slides.length; i++) {
+      const dot = document.createElement('li');
+      dotsMassive.push(dot);
+      dot.classList.add('dot');
+      dot.setAttribute('data-slide', i + 1);
+      dots.append(dot);
+   }
+   slider.append(dots);
+   dotsMassive[slideIndex - 1].style.opacity = 1;
+
+   function changeActiveDot() {
+      dotsMassive.forEach(dot => {
+         dot.style.opacity = 0.6;
+      });
+      dotsMassive[slideIndex - 1].style.opacity = 1;
+   }
+
+   function changeCurrSlide() {
+      slidesField.style.transform = `translateX(-${offset}px)`;
+   }
+
+   function changeCurrSlideNum() {
+      if (slideIndex < 10) {
+         currSlideNum.textContent = `0${slideIndex}`;
+      } else {
+         currSlideNum.textContent = slideIndex;
+      }
+   }
+
    buttonNext.addEventListener('click', () => {
       if (offset == +width.slice(0, (width.length - 2)) * (slides.length - 1)) {
          offset = 0;
@@ -340,13 +377,9 @@ document.addEventListener('DOMContentLoaded', () => {
          slideIndex++;
       }
 
-      if (slideIndex < 10) {
-         currSlideNum.textContent = `0${slideIndex}`;
-      } else {
-         currSlideNum.textContent = slideIndex;
-      }
-
-      slidesField.style.transform = `translateX(-${offset}px)`;
+      changeActiveDot();
+      changeCurrSlide();
+      changeCurrSlideNum();
    });
 
    buttonPrev.addEventListener('click', () => {
@@ -362,66 +395,24 @@ document.addEventListener('DOMContentLoaded', () => {
          slideIndex--;
       }
 
-      if (slideIndex < 10) {
-         currSlideNum.textContent = `0${slideIndex}`;
-      } else {
-         currSlideNum.textContent = slideIndex;
-      }
+      changeActiveDot();
+      changeCurrSlide();
+      changeCurrSlideNum();
+   });
 
+   dotsMassive.forEach(dot => {
+      dot.addEventListener('click', (e) => {
+         const slideTo = dot.getAttribute('data-slide');
 
-      slidesField.style.transform = `translateX(-${offset}px)`;
+         slideIndex = slideTo;
+         offset = (slideTo - 1) * +width.slice(0, (width.length - 2));
+
+         changeActiveDot();
+         changeCurrSlide();
+         changeCurrSlideNum();
+
+      });
    });
 
 
-
-
-
-   // showSlides(1);
-
-   // function addZeros() {
-   //    if (slides.length < 10) {
-   //       allSlideNum.textContent = `0${slides.length}`;
-   //    } else {
-   //       allSlideNum.textContent = '{slideIndex}';
-   //    }
-   // }
-
-   // function showSlides(n) {
-   //    if (slideIndex > slides.length) {
-   //       slideIndex = 1;
-   //    }
-   //    if (slideIndex < 1) {
-   //       slideIndex = slides.length;
-   //    }
-
-   //    addZeros();
-
-   //    if (currSlideNum < 10) {
-   //       currSlideNum.textContent = `0${slideIndex}`;
-   //    } else {
-   //       currSlideNum.textContent = '{slideIndex}';
-   //    }
-
-   //    document.querySelector('#current').textContent = `0${slideIndex}`;
-   //    slides.forEach(slide => {
-   //       slide.style.display = 'none';
-   //    });
-
-   //    slides[slideIndex - 1].style.display = '';
-   // }
-
-   // function changeSliderNumber(n) {
-   //    slideIndex += n;
-   // }
-
-   // counter.addEventListener('click', (e) => {
-   //    if (e.target === buttonNext) {
-   //       changeSliderNumber(1);
-   //       showSlides(slideIndex);
-   //    }
-   //    if (e.target === buttonPrev) {
-   //       changeSliderNumber(-1);
-   //       showSlides(slideIndex);
-   //    }
-   // });
 });
