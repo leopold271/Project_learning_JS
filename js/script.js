@@ -364,11 +364,15 @@ document.addEventListener('DOMContentLoaded', () => {
       }
    }
 
+   function noDigitsInStr(str) {
+      return +str.replace(/\D/g, ' ');
+   }
+
    buttonNext.addEventListener('click', () => {
-      if (offset == +width.slice(0, (width.length - 2)) * (slides.length - 1)) {
+      if (offset == noDigitsInStr(width) * (slides.length - 1)) {
          offset = 0;
       } else {
-         offset += +width.slice(0, (width.length - 2));
+         offset += noDigitsInStr(width);
       }
 
       if (slideIndex == slides.length) {
@@ -384,9 +388,9 @@ document.addEventListener('DOMContentLoaded', () => {
 
    buttonPrev.addEventListener('click', () => {
       if (offset == 0) {
-         offset = +width.slice(0, (width.length - 2)) * (slides.length - 1);
+         offset = noDigitsInStr(width) * (slides.length - 1);
       } else {
-         offset -= +width.slice(0, (width.length - 2));
+         offset -= noDigitsInStr(width);
       }
 
       if (slideIndex == 1) {
@@ -405,7 +409,7 @@ document.addEventListener('DOMContentLoaded', () => {
          const slideTo = dot.getAttribute('data-slide');
 
          slideIndex = slideTo;
-         offset = (slideTo - 1) * +width.slice(0, (width.length - 2));
+         offset = (slideTo - 1) * noDigitsInStr(width);
 
          changeActiveDot();
          changeCurrSlide();
